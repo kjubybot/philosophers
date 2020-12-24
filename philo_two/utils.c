@@ -6,7 +6,7 @@
 /*   By: kjubybot <kjubybot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 17:32:50 by kjubybot          #+#    #+#             */
-/*   Updated: 2020/12/24 18:58:40 by kjubybot         ###   ########.fr       */
+/*   Updated: 2020/12/24 18:58:50 by kjubybot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,19 @@
 int				ft_atoi(char *s)
 {
 	int	res;
-	int	sign;
 
-	sign = 1;
 	res = 0;
 	while (*s == ' ' || (*s >= 9 && *s <= 13))
 		s++;
 	if (*s == '+' || *s == '-')
 	{
-		sign = *s == '-' ? -1 : sign;
+		if (*s == '-')
+			return (0);
 		s++;
 	}
 	while (*s >= '0' && *s <= '9')
 		res = res * 10 + (*s++ - '0');
-	return (res * sign);
+	return (res);
 }
 
 void			ft_putnbr(unsigned long n)

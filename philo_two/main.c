@@ -55,6 +55,9 @@ void	*routine(void *philo_v)
 	while (!philo->sim->sim_ended)
 	{
 		eat(philo);
+		if (philo->sim->times_eat > 0 &&
+			philo->times_eaten >= philo->sim->times_eat)
+			return (0);
 		sleep_and_think(philo);
 	}
 	return (0);

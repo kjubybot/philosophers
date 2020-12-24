@@ -6,7 +6,7 @@
 /*   By: kjubybot <kjubybot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 17:31:11 by kjubybot          #+#    #+#             */
-/*   Updated: 2020/12/24 22:58:53 by kjubybot         ###   ########.fr       */
+/*   Updated: 2020/12/24 23:44:48 by kjubybot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,72 +18,65 @@ void	*monitor(void *philo_v)
 	unsigned long	now;
 
 	philo = (t_philo *)philo_v;
-	while (!philo->sim->sim_ended)
+	while (1)
 	{
 		now = get_time();
-		if (philo->state != STATE_EATING && now >= philo->time_of_death &&
-		!philo->sim->sim_ended)
+		if (philo->state != STATE_EATING && now >= philo->time_of_death)
 		{
-			philo->sim->sim_ended = 1;
 			display_message(philo, " died\n");
-			break ;
-		}
-		if (philo->sim->philos_full == philo->sim->num_philos)
-		{
-			philo->sim->sim_ended = 1;
-			break ;
+			exit(1);
 		}
 		usleep(100);
 	}
-	pthread_mutex_unlock(&philo->sim->end);
-	return (0);
 }
 
-void	*routine(void *philo_v)
+void	routine(t_philo *philo)
 {
-	t_philo			*philo;
 	unsigned long	now;
 	pthread_t		th;
 
-	philo = (t_philo *)philo_v;
 	if (philo->id % 2 == 0)
 		usleep(500);
 	now = get_time();
 	philo->time_of_death = now + philo->sim->time_to_die;
 	pthread_create(&th, NULL, monitor, philo);
 	pthread_detach(th);
-	while (!philo->sim->sim_ended)
+	while (1)
 	{
 		eat(philo);
 		if (philo->sim->times_eat > 0 &&
 			philo->times_eaten >= philo->sim->times_eat)
-			return (0);
+			exit(0);
 		sleep_and_think(philo);
 	}
-	return (0);
 }
-
 int		start_sim(t_sim *sim)
 {
-	pthread_t	th;
-	int			i;
+	pid_t	pid;
+	int		i;
 
 	sim->start_time = get_time();
 	sim->sim_ended = 0;
 	i = 0;
 	while (i < sim->num_philos)
 	{
-		if (pthread_create(&th, NULL, routine, &sim->philos[i]))
+		if ((pid = fork()) == 0)
+			routine(&sim->philos[i]);
+		else if (pid > 0)
+			sim->philos[i].pid = pid;
+		else
 			return (0);
-		pthread_detach(th);
 		i++;
 	}
 	return (1);
 }
 
+#include <stdio.h>
 int		main(int argc, char **argv)
 {
 	t_sim	sim;
+	int		status;
+	int		i;
 
 	if (argc < 5 || argc > 6)
 		return (EXIT_FAILURE);
@@ -91,8 +84,19 @@ int		main(int argc, char **argv)
 		return (free_and_exit(&sim, EXIT_FAILURE, "Initialization error\n"));
 	if (!start_sim(&sim))
 		return (free_and_exit(&sim, EXIT_FAILURE, "Error starting sim\n"));
-	pthread_mutex_lock(&sim.end);
-	pthread_mutex_unlock(&sim.end);
-	pthread_mutex_lock(&sim.write_m);
+	while (1)
+	{
+		waitpid(-1, &status, 0);
+		if ((status & 0xff00) >> 8 == 0)
+			sim.philos_full++;
+		else if ((status & 0xff00) >> 8 == 1)
+			break ;
+		if (sim.philos_full == sim.num_philos)
+			break ;
+	}
+	i = 0;
+	while (i < sim.num_philos)
+		kill(sim.philos[i++].pid, 15);
+	sem_wait(sim.write_m);
 	return (free_and_exit(&sim, EXIT_SUCCESS, "Simulation ended\n"));
 }

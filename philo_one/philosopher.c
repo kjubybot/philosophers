@@ -6,7 +6,7 @@
 /*   By: kjubybot <kjubybot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 17:32:30 by kjubybot          #+#    #+#             */
-/*   Updated: 2020/12/24 18:31:28 by kjubybot         ###   ########.fr       */
+/*   Updated: 2020/12/24 18:31:43 by kjubybot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,12 @@ void	eat(t_philo *philo)
 		philo->sim->philos_full++;
 	philo->state = STATE_EATING;
 	usleep(philo->sim->time_to_eat * 1000);
+	pthread_mutex_unlock(&philo->sim->forks[philo->lfork]);
+	pthread_mutex_unlock(&philo->sim->forks[philo->rfork]);
 }
 
 void	sleep_and_think(t_philo *philo)
 {
-	pthread_mutex_unlock(&philo->sim->forks[philo->lfork]);
-	pthread_mutex_unlock(&philo->sim->forks[philo->rfork]);
 	philo->state = STATE_SLEEPING;
 	display_message(philo, " is sleeping\n");
 	usleep(philo->sim->time_to_sleep * 1000);
