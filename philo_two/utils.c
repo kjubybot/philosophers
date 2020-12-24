@@ -6,7 +6,7 @@
 /*   By: kjubybot <kjubybot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 17:32:50 by kjubybot          #+#    #+#             */
-/*   Updated: 2020/12/24 18:31:28 by kjubybot         ###   ########.fr       */
+/*   Updated: 2020/12/24 18:58:40 by kjubybot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,19 +47,12 @@ void			ft_putnbr(unsigned long n)
 
 int				free_and_exit(t_sim *sim, int status, char *message)
 {
-	int	i;
-
 	if (sim->forks)
-	{
-		i = 0;
-		while (i < sim->num_philos)
-			pthread_mutex_destroy(&sim->forks[i++]);
-		free(sim->forks);
-	}
+		sem_unlink("forks_sem");
 	if (sim->philos)
 		free(sim->philos);
 	write(1, message, ft_strlen(message));
-	pthread_mutex_destroy(&sim->write_m);
+	sem_unlink("write_sem");
 	return (status);
 }
 

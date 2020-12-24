@@ -6,7 +6,7 @@
 /*   By: kjubybot <kjubybot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 17:31:11 by kjubybot          #+#    #+#             */
-/*   Updated: 2020/12/24 18:46:56 by kjubybot         ###   ########.fr       */
+/*   Updated: 2020/12/24 18:54:44 by kjubybot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	*monitor(void *philo_v)
 		}
 		usleep(100);
 	}
-	pthread_mutex_unlock(&philo->sim->end);
+	sem_post(philo->sim->end);
 	return (0);
 }
 
@@ -88,8 +88,8 @@ int		main(int argc, char **argv)
 		return (free_and_exit(&sim, EXIT_FAILURE, "Initialization error\n"));
 	if (!start_sim(&sim))
 		return (free_and_exit(&sim, EXIT_FAILURE, "Error starting sim\n"));
-	pthread_mutex_lock(&sim.end);
-	pthread_mutex_unlock(&sim.end);
-	pthread_mutex_lock(&sim.write_m);
+	sem_wait(sim.end);
+	sem_unlink("end_sem");
+	sem_wait(sim.write_m);
 	return (free_and_exit(&sim, EXIT_SUCCESS, "Simulation ended\n"));
 }

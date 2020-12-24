@@ -6,7 +6,7 @@
 /*   By: kjubybot <kjubybot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 17:32:30 by kjubybot          #+#    #+#             */
-/*   Updated: 2020/12/24 18:31:28 by kjubybot         ###   ########.fr       */
+/*   Updated: 2020/12/24 18:55:36 by kjubybot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,19 @@
 
 void	display_message(t_philo *philo, char *message)
 {
-	pthread_mutex_lock(&philo->sim->write_m);
+	sem_wait(philo->sim->write_m);
 	ft_putnbr(get_time() - philo->sim->start_time);
 	write(1, " ", 1);
 	ft_putnbr(philo->id);
 	write(1, message, ft_strlen(message));
-	pthread_mutex_unlock(&philo->sim->write_m);
+	sem_post(philo->sim->write_m);
 }
 
 void	eat(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->sim->forks[philo->lfork]);
+	sem_wait(philo->sim->forks);
 	display_message(philo, " has taken a fork\n");
-	pthread_mutex_lock(&philo->sim->forks[philo->rfork]);
+	sem_wait(philo->sim->forks);
 	display_message(philo, " has taken a fork\n");
 	display_message(philo, " is eating\n");
 	philo->time_of_death = get_time() + philo->sim->time_to_die;
@@ -39,8 +39,8 @@ void	eat(t_philo *philo)
 
 void	sleep_and_think(t_philo *philo)
 {
-	pthread_mutex_unlock(&philo->sim->forks[philo->lfork]);
-	pthread_mutex_unlock(&philo->sim->forks[philo->rfork]);
+	sem_post(philo->sim->forks);
+	sem_post(philo->sim->forks);
 	philo->state = STATE_SLEEPING;
 	display_message(philo, " is sleeping\n");
 	usleep(philo->sim->time_to_sleep * 1000);
