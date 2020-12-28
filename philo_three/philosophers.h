@@ -6,7 +6,7 @@
 /*   By: kjubybot <kjubybot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 17:41:56 by kjubybot          #+#    #+#             */
-/*   Updated: 2020/12/24 23:37:01 by kjubybot         ###   ########.fr       */
+/*   Updated: 2020/12/28 16:01:30 by tmeizo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <limits.h>
 # include <stdlib.h>
 # include <semaphore.h>
+# include <signal.h>
 # include <pthread.h>
 # include <sys/time.h>
 # include <sys/wait.h>

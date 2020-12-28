@@ -5,7 +5,7 @@ SRCS = main.c\
        philosopher.c
 
 OBJS = $(SRCS:.c=.o)
-CC = clang
+CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 INCLUDES = philosophers.h
 LDLIBS = -lpthread
