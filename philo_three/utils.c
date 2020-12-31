@@ -46,11 +46,22 @@ void			ft_putnbr(unsigned long n)
 
 int				free_and_exit(t_sim *sim, int status, char *message)
 {
+    int i;
+
+    i = 0;
 	if (sim->forks)
 		sem_unlink("forks_sem");
-	if (sim->philos)
+    if (sim->philos)
+    {
+    	while (i < sim->num_philos)
+        {
+            if (sim->philos[i].pid)
+        		kill(sim->philos[i++].pid, 15);
+            i++;
+        }
 		free(sim->philos);
-	write(1, message, ft_strlen(message));
+    }
+   	write(1, message, ft_strlen(message));
 	sem_unlink("write_sem");
 	return (status);
 }

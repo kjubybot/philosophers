@@ -76,7 +76,6 @@ int		main(int argc, char **argv)
 {
 	t_sim	sim;
 	int		status;
-	int		i;
 
 	if (argc < 5 || argc > 6)
 		return (EXIT_FAILURE);
@@ -94,9 +93,6 @@ int		main(int argc, char **argv)
 		if (sim.philos_full == sim.num_philos)
 			break ;
 	}
-	i = 0;
-	while (i < sim.num_philos)
-		kill(sim.philos[i++].pid, 15);
 	sem_wait(sim.write_m);
 	return (free_and_exit(&sim, EXIT_SUCCESS, "Simulation ended\n"));
 }

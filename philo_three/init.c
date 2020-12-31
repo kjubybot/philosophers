@@ -25,6 +25,7 @@ int	init_philos(t_sim *sim)
 		sim->philos[i].state = STATE_THINKING;
 		sim->philos[i].sim = sim;
 		sim->philos[i].times_eaten = 0;
+        sim->philos[i].pid = 0;
 		i++;
 	}
 	return (1);
