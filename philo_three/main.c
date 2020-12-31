@@ -6,7 +6,7 @@
 /*   By: kjubybot <kjubybot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 17:31:11 by kjubybot          #+#    #+#             */
-/*   Updated: 2020/12/24 23:44:48 by kjubybot         ###   ########.fr       */
+/*   Updated: 2020/12/28 16:08:12 by tmeizo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ void	routine(t_philo *philo)
 		sleep_and_think(philo);
 	}
 }
+
 int		start_sim(t_sim *sim)
 {
 	pid_t	pid;
@@ -71,7 +72,6 @@ int		start_sim(t_sim *sim)
 	return (1);
 }
 
-#include <stdio.h>
 int		main(int argc, char **argv)
 {
 	t_sim	sim;
