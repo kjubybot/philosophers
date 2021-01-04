@@ -49,8 +49,7 @@ int				free_and_exit(t_sim *sim, int status, char *message)
     int i;
 
     i = 0;
-	if (sim->forks)
-		sem_unlink("forks_sem");
+	sem_unlink("forks_sem");
     if (sim->philos)
     {
     	while (i < sim->num_philos)

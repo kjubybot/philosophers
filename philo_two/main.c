@@ -92,7 +92,6 @@ int		main(int argc, char **argv)
 	if (!start_sim(&sim))
 		return (free_and_exit(&sim, EXIT_FAILURE, "Error starting sim\n"));
 	sem_wait(sim.end);
-	sem_unlink("end_sem");
 	sem_wait(sim.write_m);
 	return (free_and_exit(&sim, EXIT_SUCCESS, "Simulation ended\n"));
 }

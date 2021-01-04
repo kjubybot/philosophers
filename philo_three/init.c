@@ -47,8 +47,8 @@ int	init_sim(t_sim *sim, int argc, char **argv)
 	|| sim->time_to_eat <= 0 || sim->time_to_sleep <= 0 ||
 	(argc == 6 && sim->times_eat <= 0))
 		return (0);
-	sim->forks = sem_open("forks_sem", O_CREAT, 0660, sim->num_philos);
-	sim->write_m = sem_open("write_sem", O_CREAT, 0660, 1);
+	sim->forks = sem_open("forks_sem", O_CREAT | O_EXCL, 0660, sim->num_philos);
+	sim->write_m = sem_open("write_sem", O_CREAT | O_EXCL, 0660, 1);
 	if (!init_philos(sim) || !sim->forks || !sim->write_m)
 		return (0);
 	return (1);
