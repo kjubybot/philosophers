@@ -33,7 +33,7 @@ void	*monitor(void *philo_v)
 			philo->sim->sim_ended = 1;
 			break ;
 		}
-		ft_usleep(2000);
+		ft_usleep(500);
 	}
 	sem_post(philo->sim->end);
 	return (0);

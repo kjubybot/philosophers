@@ -27,7 +27,7 @@ void	*monitor(void *philo_v)
 			display_message(philo, " died\n");
 			exit(1);
 		}
-		ft_usleep(2000);
+		ft_usleep(1000);
 	}
 }
 
