@@ -70,4 +70,6 @@ int				free_and_exit(t_sim *sim, int status, char *message);
 
 unsigned long	get_time(void);
 
+void			ft_usleep(useconds_t usec);
+
 #endif

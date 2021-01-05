@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kjubybot <kjubybot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tmeizo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/24 17:31:11 by kjubybot          #+#    #+#             */
-/*   Updated: 2020/12/24 18:54:44 by kjubybot         ###   ########.fr       */
+/*   Created: 2021/01/05 12:36:21 by tmeizo            #+#    #+#             */
+/*   Updated: 2021/01/05 12:36:22 by tmeizo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	*monitor(void *philo_v)
 			philo->sim->sim_ended = 1;
 			break ;
 		}
-		usleep(100);
+		ft_usleep(2000);
 	}
 	sem_post(philo->sim->end);
 	return (0);
@@ -47,7 +47,7 @@ void	*routine(void *philo_v)
 
 	philo = (t_philo *)philo_v;
 	if (philo->id % 2 == 0)
-		usleep(500);
+		ft_usleep(500);
 	now = get_time();
 	philo->time_of_death = now + philo->sim->time_to_die;
 	pthread_create(&th, NULL, monitor, philo);

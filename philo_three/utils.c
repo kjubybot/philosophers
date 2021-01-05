@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kjubybot <kjubybot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tmeizo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/24 17:32:50 by kjubybot          #+#    #+#             */
-/*   Updated: 2020/12/24 18:58:40 by kjubybot         ###   ########.fr       */
+/*   Created: 2021/01/05 12:37:06 by tmeizo            #+#    #+#             */
+/*   Updated: 2021/01/05 12:37:07 by tmeizo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,21 +46,11 @@ void			ft_putnbr(unsigned long n)
 
 int				free_and_exit(t_sim *sim, int status, char *message)
 {
-    int i;
-
-    i = 0;
 	sem_unlink("forks_sem");
-    if (sim->philos)
-    {
-    	while (i < sim->num_philos)
-        {
-            if (sim->philos[i].pid)
-        		kill(sim->philos[i++].pid, 15);
-            i++;
-        }
+	sem_unlink("death_sem");
+	if (sim->philos)
 		free(sim->philos);
-    }
-   	write(1, message, ft_strlen(message));
+	write(1, message, ft_strlen(message));
 	sem_unlink("write_sem");
 	return (status);
 }

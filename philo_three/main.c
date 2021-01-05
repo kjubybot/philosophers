@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kjubybot <kjubybot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tmeizo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/24 17:31:11 by kjubybot          #+#    #+#             */
-/*   Updated: 2020/12/28 16:08:12 by tmeizo           ###   ########.fr       */
+/*   Created: 2021/01/05 12:36:57 by tmeizo            #+#    #+#             */
+/*   Updated: 2021/01/05 12:36:58 by tmeizo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,11 @@ void	*monitor(void *philo_v)
 		now = get_time();
 		if (philo->state != STATE_EATING && now >= philo->time_of_death)
 		{
+			sem_wait(philo->sim->death);
 			display_message(philo, " died\n");
 			exit(1);
 		}
-		usleep(100);
+		ft_usleep(2000);
 	}
 }
 
@@ -35,8 +36,6 @@ void	routine(t_philo *philo)
 	unsigned long	now;
 	pthread_t		th;
 
-	if (philo->id % 2 == 0)
-		usleep(500);
 	now = get_time();
 	philo->time_of_death = now + philo->sim->time_to_die;
 	pthread_create(&th, NULL, monitor, philo);
@@ -72,6 +71,18 @@ int		start_sim(t_sim *sim)
 	return (1);
 }
 
+void	kill_all(t_sim *sim)
+{
+	int	i;
+
+	i = 0;
+	while (i < sim->num_philos)
+	{
+		kill(sim->philos[i].pid, 2);
+		i++;
+	}
+}
+
 int		main(int argc, char **argv)
 {
 	t_sim	sim;
@@ -93,6 +104,7 @@ int		main(int argc, char **argv)
 		if (sim.philos_full == sim.num_philos)
 			break ;
 	}
+	kill_all(&sim);
 	sem_wait(sim.write_m);
 	return (free_and_exit(&sim, EXIT_SUCCESS, "Simulation ended\n"));
 }

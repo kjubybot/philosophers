@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kjubybot <kjubybot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tmeizo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/24 17:32:00 by kjubybot          #+#    #+#             */
-/*   Updated: 2020/12/24 18:51:20 by kjubybot         ###   ########.fr       */
+/*   Created: 2021/01/05 12:36:12 by tmeizo            #+#    #+#             */
+/*   Updated: 2021/01/05 12:36:15 by tmeizo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,14 @@ int	init_sim(t_sim *sim, int argc, char **argv)
 	|| sim->time_to_eat <= 0 || sim->time_to_sleep <= 0 ||
 	(argc == 6 && sim->times_eat <= 0))
 		return (0);
-	sim->forks = sem_open("forks_sem", O_CREAT | O_EXCL, 0660, sim->num_philos);
-	sim->write_m = sem_open("write_sem", O_CREAT | O_EXCL, 0660, 1);
-	sim->end = sem_open("end_sem", O_CREAT | O_EXCL, 0660, 0);
-	if (!init_philos(sim) || !sim->forks || !sim->write_m || !sim->end)
+	sem_unlink("forks_sem");
+	sem_unlink("write_sem");
+	sem_unlink("end_sem");
+	sim->forks = sem_open("forks_sem", O_CREAT | O_EXCL, 0644, sim->num_philos);
+	sim->write_m = sem_open("write_sem", O_CREAT | O_EXCL, 0644, 1);
+	sim->end = sem_open("end_sem", O_CREAT | O_EXCL, 0644, 0);
+	if (!init_philos(sim) || sim->forks == SEM_FAILED ||
+		sim->write_m == SEM_FAILED || sim->end == SEM_FAILED)
 		return (0);
 	return (1);
 }

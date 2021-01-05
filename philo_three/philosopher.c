@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosopher.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kjubybot <kjubybot@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tmeizo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/24 17:32:30 by kjubybot          #+#    #+#             */
-/*   Updated: 2020/12/24 23:25:52 by kjubybot         ###   ########.fr       */
+/*   Created: 2021/01/05 12:37:01 by tmeizo            #+#    #+#             */
+/*   Updated: 2021/01/05 12:37:02 by tmeizo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	eat(t_philo *philo)
 	if (philo->times_eaten == philo->sim->times_eat)
 		philo->sim->philos_full++;
 	philo->state = STATE_EATING;
-	usleep(philo->sim->time_to_eat * 1000);
+	ft_usleep(philo->sim->time_to_eat * 1000);
 	sem_post(philo->sim->forks);
 	sem_post(philo->sim->forks);
 }
@@ -43,7 +43,18 @@ void	sleep_and_think(t_philo *philo)
 {
 	philo->state = STATE_SLEEPING;
 	display_message(philo, " is sleeping\n");
-	usleep(philo->sim->time_to_sleep * 1000);
+	ft_usleep(philo->sim->time_to_sleep * 1000);
 	philo->state = STATE_THINKING;
 	display_message(philo, " is thinking\n");
+}
+
+void	ft_usleep(useconds_t usec)
+{
+	unsigned long start;
+	unsigned long msc;
+
+	msc = usec / 1000;
+	start = get_time();
+	while (get_time() - start < msc)
+		usleep(500);
 }

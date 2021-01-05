@@ -44,6 +44,7 @@ typedef struct	s_sim
 	t_philo			*philos;
 	sem_t			*forks;
 	sem_t			*write_m;
+	sem_t			*death;
 	int				num_philos;
 	unsigned long	time_to_die;
 	unsigned long	time_to_eat;
@@ -71,5 +72,7 @@ int				ft_strlen(char *s);
 int				free_and_exit(t_sim *sim, int status, char *message);
 
 unsigned long	get_time(void);
+
+void			ft_usleep(useconds_t usec);
 
 #endif
