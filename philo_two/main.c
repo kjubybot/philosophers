@@ -15,23 +15,24 @@
 void	*monitor(void *philo_v)
 {
 	t_philo			*philo;
-	unsigned long	now;
 
 	philo = (t_philo *)philo_v;
 	while (!philo->sim->sim_ended)
 	{
-		now = get_time();
-		if (philo->state != STATE_EATING && now >= philo->time_of_death &&
-		!philo->sim->sim_ended)
+		if (philo->state != STATE_EATING && get_time() >= philo->time_of_death
+		&& !philo->sim->sim_ended)
 		{
+			sem_wait(philo->sim->write_m);
 			philo->sim->sim_ended = 1;
-			display_message(philo, " died\n");
-			break ;
+			ft_putnbr(get_time() - philo->sim->start_time);
+			write(1, " ", 1);
+			ft_putnbr(philo->id);
+			write(1, " died\n", 6);
 		}
 		if (philo->sim->philos_full == philo->sim->num_philos)
 		{
+			sem_wait(philo->sim->write_m);
 			philo->sim->sim_ended = 1;
-			break ;
 		}
 		ft_usleep(500);
 	}
@@ -92,6 +93,5 @@ int		main(int argc, char **argv)
 	if (!start_sim(&sim))
 		return (free_and_exit(&sim, EXIT_FAILURE, "Error starting sim\n"));
 	sem_wait(sim.end);
-	sem_wait(sim.write_m);
 	return (free_and_exit(&sim, EXIT_SUCCESS, "Simulation ended\n"));
 }

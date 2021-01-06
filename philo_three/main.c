@@ -24,8 +24,12 @@ void	*monitor(void *philo_v)
 		if (philo->state != STATE_EATING && now >= philo->time_of_death)
 		{
 			sem_wait(philo->sim->death);
-			display_message(philo, " died\n");
-			exit(1);
+			sem_wait(philo->sim->write_m);
+			ft_putnbr(get_time() - philo->sim->start_time);
+			write(1, " ", 1);
+			ft_putnbr(philo->id);
+			write(1, " died\n", 6);
+			exit(free_and_exit(philo->sim, 1, ""));
 		}
 		ft_usleep(1000);
 	}
@@ -45,7 +49,7 @@ void	routine(t_philo *philo)
 		eat(philo);
 		if (philo->sim->times_eat > 0 &&
 			philo->times_eaten >= philo->sim->times_eat)
-			exit(0);
+			exit(free_and_exit(philo->sim, 0, ""));
 		sleep_and_think(philo);
 	}
 }
@@ -78,7 +82,7 @@ void	kill_all(t_sim *sim)
 	i = 0;
 	while (i < sim->num_philos)
 	{
-		kill(sim->philos[i].pid, 2);
+		kill(sim->philos[i].pid, 9);
 		i++;
 	}
 }
@@ -102,9 +106,11 @@ int		main(int argc, char **argv)
 		else if ((status & 0xff00) >> 8 == 1)
 			break ;
 		if (sim.philos_full == sim.num_philos)
+		{
+			sem_wait(sim.write_m);
 			break ;
+		}
 	}
 	kill_all(&sim);
-	sem_wait(sim.write_m);
 	return (free_and_exit(&sim, EXIT_SUCCESS, "Simulation ended\n"));
 }

@@ -46,6 +46,7 @@ void			ft_putnbr(unsigned long n)
 
 int				free_and_exit(t_sim *sim, int status, char *message)
 {
+	ft_usleep(sim->time_to_die * 1000);
 	sem_unlink("end_sem");
 	sem_unlink("forks_sem");
 	if (sim->philos)

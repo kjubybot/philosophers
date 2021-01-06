@@ -48,6 +48,7 @@ int				free_and_exit(t_sim *sim, int status, char *message)
 {
 	int	i;
 
+	ft_usleep(sim->time_to_die * 1000);
 	if (sim->forks)
 	{
 		i = 0;
@@ -58,6 +59,7 @@ int				free_and_exit(t_sim *sim, int status, char *message)
 	if (sim->philos)
 		free(sim->philos);
 	write(1, message, ft_strlen(message));
+	pthread_mutex_destroy(&sim->end);
 	pthread_mutex_destroy(&sim->write_m);
 	return (status);
 }
