@@ -6,7 +6,7 @@
 /*   By: tmeizo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/05 12:35:45 by tmeizo            #+#    #+#             */
-/*   Updated: 2021/01/05 12:35:47 by tmeizo           ###   ########.fr       */
+/*   Updated: 2021/01/07 16:10:24 by tmeizo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	*monitor(void *philo_v)
 			pthread_mutex_lock(&philo->sim->write_m);
 			philo->sim->sim_ended = 1;
 		}
-		ft_usleep(1000);
+		ft_usleep(500);
 	}
 	pthread_mutex_unlock(&philo->sim->end);
 	return (0);
@@ -48,7 +48,7 @@ void	*routine(void *philo_v)
 
 	philo = (t_philo *)philo_v;
 	if (philo->id % 2 == 0)
-		ft_usleep(500);
+		usleep(500);
 	now = get_time();
 	philo->time_of_death = now + philo->sim->time_to_die;
 	pthread_create(&th, NULL, monitor, philo);

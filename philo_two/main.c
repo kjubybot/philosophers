@@ -48,7 +48,7 @@ void	*routine(void *philo_v)
 
 	philo = (t_philo *)philo_v;
 	if (philo->id % 2 == 0)
-		ft_usleep(500);
+		usleep(500);
 	now = get_time();
 	philo->time_of_death = now + philo->sim->time_to_die;
 	pthread_create(&th, NULL, monitor, philo);
